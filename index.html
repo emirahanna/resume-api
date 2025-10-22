@@ -7,10 +7,10 @@
 <body>
 <div id="pageContainer">
     <div id="controls">
-<button>Add</button>
-<button>Delete</button>
-<button>Download</button>
-<button>View Full Resume</button>
+<button onclick="addData()">Add</button>
+<button onclick="deleteData()">Delete</button>
+<button>Download</button> <!--Emira wants to download formatted resume for user -->
+<button onclick="viewResume()">View Full Resume</button>
 <select name="resume-section" id="resumeSection">
     <option value="basics">Basic Information</option>
     <option value="volunteer">Volunteering Experience</option>
@@ -24,7 +24,7 @@
     <option value="references">References</option>
     <option value="projects">Projects</option>
 </select>
-<input type="text">
+<input id= "userInput" type="text">
     </div>
 <div id="resumeDisplay">
 

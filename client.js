@@ -17,8 +17,8 @@ function addData(){
 function deleteData(){
     const request = new XMLHttpRequest();
     let section = document.querySelector("#resumeSection")
-    let data = document.querySelector("#userInput");
-    request.open("DELETE",`http://127.0.0.1:3000/delete${section}/${data}`,true);
+    let data = document.querySelector("#labelInput");
+    request.open("DELETE",`http://127.0.0.1:3000/delete/${section}/${data}`,true);
     request.send();
 }
 function readData(){

@@ -6,30 +6,38 @@
 </head>
 <body>
 <div id="pageContainer">
-    <div id="controls">
-<button onclick="addData()">Add</button>
-<button onclick="deleteData()">Delete</button>
-<button>Download</button> <!--Emira wants to download formatted resume for user -->
-<button onclick="viewResume()">View Full Resume</button>
-<select name="resume-section" id="resumeSection">
-    <option value="basics">Basic Information</option>
-    <option value="volunteer">Volunteering Experience</option>
-    <option value="education">Education</option>
-    <option value="awards">Awards</option>
-    <option value="certificates">Certificates</option>
-    <option value="publications">Publications</option>
-    <option value="skills">Skills</option>
-    <option value="languages">Languages</option>
-    <option value="interests">Interests</option>
-    <option value="references">References</option>
-    <option value="projects">Projects</option>
-</select>
-<input id= "userInput" type="text">
+        <div id="buttons">
+        <button onclick="addData()">Add</button>
+        <button onclick="deleteData()">Delete</button>
+        <button onclick="readData()">View</button>
+        <button>Download</button> <!--Emira wants to download formatted resume for user -->
+        <button onclick="viewResume()">View Full Resume</button>
+        </div>
+        <div id="textFields">
+        <label for="resumeSection">Resume Category:</label>
+        <select name="resume-section" id="resumeSection">
+            <option value="basics">Basic Information</option>
+            <option value="work">Work</option>
+            <option value="volunteer">Volunteering Experience</option>
+            <option value="education">Education</option>
+            <option value="awards">Awards</option>
+            <option value="certificates">Certificates</option>
+            <option value="publications">Publications</option>
+            <option value="skills">Skills</option>
+            <option value="languages">Languages</option>
+            <option value="interests">Interests</option>
+            <option value="references">References</option>
+            <option value="projects">Projects</option>
+        </select>
+        <label for="labelInput">Title</label>
+        <input id="labelInput" type="text">
+        <label for="valueInput">Description</label>
+        <input id="valueInput" type="text">
+        </div>
+    <div id="resumeDisplay">
+lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
     </div>
-<div id="resumeDisplay">
-
 </div>
-</div>
-
+<script src="client.js" defer></script>
 </body>
 </html>

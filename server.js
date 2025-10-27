@@ -13,9 +13,10 @@ app.get('/viewResume', (req, res) => {
 })
 
 app.post('/add:category', (req, res) => {
-    //TODO: add the information to resume.basics
-    //resume.basics.(new key): new value
-    //or use a spread operator
+    const { label, description } = req.query;
+    const resumeSection = parseParam(req.params.category)
+    resumeSection[`${label}`] = description
+    res.json(resumeSection)
 })
 
 app.post('/delete:category', (req, res) => {

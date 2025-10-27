@@ -1,24 +1,25 @@
-function sendRequest() {
-    const request = new XMLHttpRequest();
-    request.open("GET", `http://127.0.0.1:3000/${query}`, true);
-    request.send();
-    request.onload = function(){
-        document.querySelector('#reqResponse').innerHTML = request.response;
-    }
-}
 function addData(){
     const request = new XMLHttpRequest();
-    let section = document.querySelector("#resumeSection")
+    const params = new URLSearchParams({label: document.querySelector('#labelInput').value, description: document.querySelector('#valueInput').value});
+    let section = document.querySelector("#resumeSection").value
     let data = document.querySelector("#userInput");
-    //is this the best way to send data? can it be query param instead
-    request.open("POST",`http://127.0.0.1:3000/add${section}/${data}`,true);
+    request.open("POST",`http://127.0.0.1:3000/add${section}?${params}`,true);
     request.send();
+    request.onload = function(){
+        document.querySelector('#resumeDisplay').innerHTML = request.response;
+    }
 }
 function deleteData(){
     const request = new XMLHttpRequest();
+<<<<<<< HEAD
     let section = document.querySelector("#resumeSection")
     let data = document.querySelector("#labelInput");
     request.open("DELETE",`http://127.0.0.1:3000/delete/${section}/${data}`,true);
+=======
+    let section = document.querySelector("#resumeSection").value
+    let data = document.querySelector("#userInput");
+    request.open("DELETE",`http://127.0.0.1:3000/delete${section}/${data}`,true);
+>>>>>>> 5db0f03f3e1654e565523cd606bad0076c0ce423
     request.send();
 }
 function readData(){

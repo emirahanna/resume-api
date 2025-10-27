@@ -23,16 +23,16 @@ app.post('/add:category', (req, res) => {
 app.delete('/delete:category:title', (req, res) => {
     //TODO: remove the information to resume.basics
     // can we just create a new copy? and delete the old one once the new one has been created?
-    let list = res.json(parseParam(req.params.category));
+    let list = parseParam(req.params.category).category;
     console.log(list);
     let newList = [];
     for (let i = 0; i < list.length(); i++){
-        if (!list[i].equals(req.params.title)){
+        if (!list[i].position.equals(req.params.title)){
             newList.push(list[i]);
         }
     }
+    parseParam(req.params.category).category = newList;
 
-    fs.writeFileSync("data.json",stringify(list));
 })
 
 app.get('/get:category', (req, res) => {

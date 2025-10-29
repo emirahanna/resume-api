@@ -2,6 +2,7 @@
 
 const express = require('express');
 const cors = require('cors');
+const fs = require('fs');
 const app = express();
 const port =  3000;
 const address = '127.0.0.1';
@@ -19,9 +20,19 @@ app.post('/add:category', (req, res) => {
     res.json(resumeSection)
 })
 
-app.post('/delete:category', (req, res) => {
+app.delete('/delete:category:title', (req, res) => {
     //TODO: remove the information to resume.basics
     // can we just create a new copy? and delete the old one once the new one has been created?
+    let list = parseParam(req.params.category).category;
+    console.log(list);
+    let newList = [];
+    for (let i = 0; i < list.length(); i++){
+        if (!list[i].position.equals(req.params.title)){
+            newList.push(list[i]);
+        }
+    }
+    parseParam(req.params.category).category = newList;
+
 })
 
 app.get('/get:category', (req, res) => {

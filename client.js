@@ -12,9 +12,15 @@ function addData(){
 }
 function deleteData(){
     const request = new XMLHttpRequest();
+<<<<<<< HEAD
+    let section = document.querySelector("#resumeSection")
+    let data = document.querySelector("#labelInput");
+    request.open("DELETE",`http://127.0.0.1:3000/delete/${section}/${data}`,true);
+=======
     let section = document.querySelector("#resumeSection").value
     let data = document.querySelector("#userInput");
     request.open("DELETE",`http://127.0.0.1:3000/delete${section}/${data}`,true);
+>>>>>>> 5db0f03f3e1654e565523cd606bad0076c0ce423
     request.send();
 }
 function readData(){

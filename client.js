@@ -5,9 +5,10 @@ function addData(){
     let data = document.querySelector("#userInput");
     request.open("POST",`http://127.0.0.1:3000/add${section}?${params}`,true);
     request.send();
-    request.onload = function(){
-        document.querySelector('#resumeDisplay').innerHTML = request.response;
+    request.onload = function() {
+        parseObject(JSON.parse(request.responseText));
     }
+
 }
 function deleteData(){
     const request = new XMLHttpRequest();
@@ -30,4 +31,17 @@ function viewResume(){
     const request = new XMLHttpRequest();
     request.open("GET",`http://127.0.0.1:3000/viewResume`,true);
     request.send();
+}
+
+function parseObject(obj) {
+    for (const key in obj) {
+        if (typeof obj[key] === 'object' && obj[key] !== null) {
+            parseObject(obj[key]); // recurse into nested objects or arrays
+        } else {
+            const newEl = document.createElement("p");
+            const newTextNode = document.createTextNode(obj[key]);
+            newEl.appendChild(newTextNode);
+            document.body.appendChild(newEl);
+        }
+    }
 }

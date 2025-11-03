@@ -4,30 +4,59 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const app = express();
-const port =  3000;
+const port = 3001;
 const address = '127.0.0.1';
+const dataPath = "./data.json";
 
 app.use(cors())
+app.use(express.json())
+
+function readData() {
+    const raw = fs.readFileSync(dataPath, "utf-8");
+    return JSON.parse(raw);
+}
+
+function writeData(data) {
+    fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
+}
+
 //should return full resume,
-app.get('/viewResume', (req, res) => {
-    res.json(resume)
+app.get('/resume', (req, res) => {
+    const data = readData();
+    Object.keys(data).length > 0 ? res.json(data) : res.json({"text" : "There is no information to be displayed."});
 })
 
-app.post('/add:category', (req, res) => {
-    const { label, description } = req.query;
-    const resumeSection = parseParam(req.params.category)
-    resumeSection[`${label}`] = description
-    res.json(resumeSection)
+app.post('/:category', (req, res) => {
+    try {
+        const newEntry = req.body;
+        const category = req.params.category;
+        //retrieve data from json
+        const data = readData();
+        //assign the new entry
+        if (category === 'basics') {
+            data[category] = newEntry
+        } else {
+            if (!Array.isArray(data[category])) data[category] = [];
+            data[category].push(newEntry);
+        }
+        //write the new data to the json
+        writeData(data);
+        // return the updated section
+        res.json(data[category]);
+    }
+    catch (err) {
+        console.error(err);
+    }
 })
 
-app.delete('/delete:category:title', (req, res) => {
+app.delete('/:category/:title', (req, res) => {
     //TODO: remove the information to resume.basics
     // can we just create a new copy? and delete the old one once the new one has been created?
     let list = parseParam(req.params.category).category;
     console.log(list);
     let newList = [];
-    for (let i = 0; i < list.length(); i++){
-        if (!list[i].position.equals(req.params.title)){
+    for (let i = 0; i < list.length(); i++) {
+        if (!list[i].position.equals(req.params.title)) {
             newList.push(list[i]);
         }
     }
@@ -35,59 +64,22 @@ app.delete('/delete:category:title', (req, res) => {
 
 })
 
-app.get('/get:category', (req, res) => {
-    res.json(parseParam(req.params.category))
+app.get('/:category', (req, res) => {
+    const data = readData();
+    const category = req.params.category;
+    res.json(data[category])
 })
 
-app.listen(port, address, () => {console.log(`Listening on port ${address}:${port}`)});
-//here for testing returning JSON, can remove to a proper thing later
-let resume = {
-    "basics": {
-        "name": "John Doe",
-        "label": "Programmer",
-        "image": "",
-        "email": "john@gmail.com",
-        "phone": "(912) 555-4321",
-        "url": "https://johndoe.com",
-        "summary": "A summary of John Doe…",
-        "location": {
-            "address": "2712 Broadway St",
-            "postalCode": "CA 94115",
-            "city": "San Francisco",
-            "countryCode": "US",
-            "region": "California"
-        },
-        "network": "Twitter",
-        "username": "john",
-        "profiles": [{
-            "url": "https://twitter.com/john"
-        }]
-    },
-    "work": [{
-        "name": "Company",
-        "position": "President",
-        "url": "https://company.com",
-        "startDate": "2013-01-01",
-        "endDate": "2014-01-01",
-        "summary": "Description…",
-        "highlights": [
-            "Started the company"
-        ]
-    }],
-    "volunteer": [{
-        "organization": "Organization",
-        "position": "Volunteer",
-        "url": "https://organization.com/",
-        "startDate": "2012-01-01",
-        "endDate": "2013-01-01",
-        "summary": "Description…",
-        "highlights": [
-            "Awarded 'Volunteer of the Month'"
-        ]
-    }],
-}
+app.listen(port, address, () => {
+    console.log(`Listening on port ${address}:${port}`)
+});
 
-function parseParam(category){
+app.use((err, req, res, next) => {
+    console.error("Server error:", err);
+    res.status(500).json({error: err.message});
+});
+
+function parseParam(category) {
     return resume[category]
 }
 

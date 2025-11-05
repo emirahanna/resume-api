@@ -1,4 +1,7 @@
 {
+  "basics": {
+    "name":"Haidyn"
+  },
   "work": [
     {
       "name": "Company",
@@ -60,11 +63,7 @@
     {
       "name": "Web Development",
       "level": "Master",
-      "keywords": [
-        "HTML",
-        "CSS",
-        "JavaScript"
-      ]
+      "keywords": "HTML, CSS, JavaScript"
     }
   ],
   "languages": [
@@ -99,8 +98,5 @@
       ],
       "url": "https://project.com/"
     }
-  ],
-  "basics": {
-    "name": "a"
-  }
+  ]
 }

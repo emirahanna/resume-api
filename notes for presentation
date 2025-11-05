@@ -7,7 +7,4 @@
 1 huge difficulty was making things work with the lifecycle. having dynamic rendering is fun and games, until i had to actually pull out the information, hence useState was introduced
 MAIN GOOD THING
 
-changed from an api to a resume builder
-react libraries
-to pdf
-material ui shit
+decided to not use figma make as the code is in tsx, and the styles were too scattered

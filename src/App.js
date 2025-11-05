@@ -11,7 +11,8 @@ import {InterestsForm} from "./form/interests-form";
 import {ReferencesForm} from "./form/references-form";
 import {ProjectsForm} from "./form/projects-form";
 import {WorkForm} from "./form/work-form";
-import {usePDF} from "react-to-pdf";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 function App() {
     //use useState for Reactive variables
@@ -33,7 +34,6 @@ function App() {
         references: <ReferencesForm/>,
         projects: <ProjectsForm/>,
     };
-    const { toPDF, targetRef } = usePDF({filename: 'resume.pdf'});
 
 //runs on start up
     useEffect(() => {
@@ -74,6 +74,7 @@ function App() {
         };
         //send data to server as JSON body
         request.send(JSON.stringify(payload));
+        readData()
     }
 
     function deleteData() {
@@ -108,6 +109,7 @@ function App() {
             }
         };
         request.send();
+        readData()
     }
 
     /**
@@ -122,8 +124,7 @@ function App() {
             if (request.status >= 200 && request.status < 300) {
                 const json = JSON.parse(request.responseText);
                 prettyPrint(json);
-            }
-            else{
+            } else {
                 document.querySelector("#resumeDisplay").innerHTML = "";
             }
         }
@@ -159,6 +160,7 @@ function App() {
                 console.error("Update failed!");
             }
         };
+        readData()
     }
 
     /**
@@ -190,8 +192,8 @@ function App() {
                 sectionEl.className = "resume-section";
 
                 const heading = document.createElement("h3");
+                sectionEl.className = "resume-heading";
                 heading.textContent = sectionKey.toUpperCase();
-                heading.style.marginBottom = "0px";
                 sectionEl.appendChild(heading);
 
                 if (sectionData.length > 0) {
@@ -204,10 +206,8 @@ function App() {
                             if (entry[key]) {
                                 const p = document.createElement("p");
                                 const noIndentKeys = ["name", "organization", "title", "university"];
-                                p.style.margin = "8px"
                                 p.textContent = noIndentKeys.includes(key) ? `${entry[key]}` : `${key.replace('_', ' ')}: ${entry[key]}`;
                                 p.style.marginLeft = noIndentKeys.includes(key) ? "0px" : "20px";
-                                p.style.lineHeight = "1";
                                 entryEl.appendChild(p);
                             }
                         }
@@ -222,8 +222,7 @@ function App() {
                 }
 
                 display.appendChild(sectionEl);
-            }
-            else if (typeof sectionData === "object" && sectionData !== null) {
+            } else if (typeof sectionData === "object" && sectionData !== null) {
                 // For basics object
                 const sectionEl = document.createElement("div");
                 sectionEl.className = "resume-section";
@@ -316,19 +315,58 @@ function App() {
             readData()
         }
     }
+
+    async function downloadPDF() {
+        const resume = document.getElementById("resumeDisplay");
+        if (!resume) return;
+
+        const canvas = await html2canvas(resume, {
+            scale: 2, // higher quality
+            useCORS: true,
+            windowWidth: document.body.scrollWidth,
+            windowHeight: resume.scrollHeight,
+        });
+
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF("p", "mm", "a4");
+
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const imgWidth = pageWidth;
+        const imgHeight = (canvas.height * pageWidth) / canvas.width;
+
+        let position = 0;
+        let heightLeft = imgHeight;
+
+        while (heightLeft > 0) {
+            pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+            if (heightLeft > 0) {
+                pdf.addPage();
+                position = 0 - (imgHeight - heightLeft);
+            }
+        }
+
+        pdf.save("resume.pdf");
+    }
+
     return (<div className="App">
-        <div id="controlContainer">
-            <div id="buttons">
-                <button onClick={addData}>Add</button>
-                {(entries.length > 0 || inUpdateState) && <button onClick={updateData}>Update</button>}
-                <button onClick={deleteData}>Delete</button>
-                <button onClick={readData}>View</button>
-                <button  onClick={() => toPDF()}>Download PDF</button>
-                <button onClick={viewResume}>View Full Resume</button>
+        <div id="header">Resume Builder</div>
+        <div id="appContainer">
+            <div id="controlContainer">
+            <div id="buttonContainer">
+                <button className="btn" onClick={addData}>
+                    <span className="icon">＋</span> Add
+                </button>
+                {/*if the dropdown has entries, or is in update state, show update button*/}
+                {(entries.length > 0 || inUpdateState) && <button className="btn outline" onClick={updateData}>✎ Update</button>}
+                <button className="btn" onClick={deleteData}> Delete</button>
+                <button className="btn" onClick={downloadPDF}>⬇ Download PDF</button>
+                <button className="btn" onClick={viewResume}>Show Full Resume</button>
             </div>
-            <div id="textFields">
+            <div id="textFieldContainer">
                 <label htmlFor="resumeSection">Resume Section:</label>
-                <select name="resume-section" id="resumeSection" onChange={selectSection} >
+                <select name="resume-section" id="resumeSection" onChange={selectSection}>
                     <option value="basics">Basic Information</option>
                     <option value="work">Work</option>
                     <option value="volunteer">Volunteering Experience</option>
@@ -343,6 +381,7 @@ function App() {
                 </select>
                 {showSectionEntry && entries.length > 0 && (
                     <div>
+                        <label htmlFor="sectionEntry">Section Entry:</label>
                         <select name="section-entry" id="sectionEntry" onChange={selectEntry}>
                             <option>--</option>
                             {entries.map((item, index) => (
@@ -355,9 +394,11 @@ function App() {
                 {formComponents[selectedSection]}
             </div>
         </div>
-        <div id="resumeDisplay" ref={targetRef}>
+        <div id="resumeDisplay">
             Your future resume goes here!
         </div>
+        </div>
+
     </div>);
 }
 

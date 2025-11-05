@@ -1,4 +1,13 @@
 1. Implement React for More Dynamic Template, also because I wanted to brush up on React, also the bevy of libraries for further complicating this project :D
 2. Switch from using Params to sending the JSON payload, as each form has n number of inputs, and I didn't want the logic to be a series of convoluted if statements (DRY anyone?)
 3. All info is kept on a local JSON
+4. use useState for Reactive variables (in App.js)
 
+
+1 huge difficulty was making things work with the lifecycle. having dynamic rendering is fun and games, until i had to actually pull out the information, hence useState was introduced
+MAIN GOOD THING
+
+changed from an api to a resume builder
+react libraries
+to pdf
+material ui shit

@@ -7,12 +7,13 @@ import {AwardsForm} from "./form/awards-form";
 import {CertificatesForm} from "./form/certificates-form";
 import {PublicationsForm} from "./form/publications-form";
 import {SkillsForm} from "./form/skills-form";
-import {InterestsForm} from "./form/interests-form";
 import {ReferencesForm} from "./form/references-form";
 import {ProjectsForm} from "./form/projects-form";
 import {WorkForm} from "./form/work-form";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import React from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 
 function App() {
     //use useState for Reactive variables
@@ -30,12 +31,11 @@ function App() {
         certificates: <CertificatesForm/>,
         publications: <PublicationsForm/>,
         skills: <SkillsForm/>,
-        interests: <InterestsForm/>,
         references: <ReferencesForm/>,
         projects: <ProjectsForm/>,
     };
 
-//runs on start up
+    //runs on start up, triggers the basic form to display on the page
     useEffect(() => {
         setSelectedSection('basics');
     }, []);
@@ -48,50 +48,39 @@ function App() {
         const payload = {};
         //finds all content in the document with the id for that section
         const inputs = document.querySelectorAll(`[id^='${section}_']`);
-        // find at least one filled field (preferably name, title, university, or organization)
-        const hasMainField = Array.from(inputs).some(input =>
-            ["name", "title", "university", "organization"].some(key =>
-                input.id.includes(`${section}_${key}`) && input.value.trim() !== ""
-            )
-        );
-
-        if (!hasMainField) {
-            alert("Please fill out at least the name, title, university, or organization field before continuing.");
-            return;
+        if (validateInput(section)) {
+            // removes the section-relevant identifier so it matches the JSON attributes and build payload only from filled inputs
+            inputs.forEach(input => {
+                if (input.value.trim() !== "")
+                    payload[input.id.replace(`${section}_`, "")] = input.value.trim();
+            });
+            //calls server to post new section data
+            const request = new XMLHttpRequest();
+            request.open("POST", `http://127.0.0.1:3001/${section}`, true);
+            request.setRequestHeader("Content-Type", "application/json");
+            request.onload = function () {
+                //pretty prints it on screen
+                prettyPrint(JSON.parse(request.responseText));
+            };
+            //send data to server as JSON body
+            request.send(JSON.stringify(payload));
+            populateEntryDropdown()
         }
-        // removes the section-relevant identifier so it matches the JSON attributes and build payload only from filled inputs
-        inputs.forEach(input => {
-            if (input.value.trim() !== "")
-                payload[input.id.replace(`${section}_`, "")] = input.value.trim();
-        });
-        //calls server to post new section data
-        const request = new XMLHttpRequest();
-        request.open("POST", `http://127.0.0.1:3001/${section}`, true);
-        request.setRequestHeader("Content-Type", "application/json");
-        request.onload = function () {
-            //pretty prints it on screen
-            prettyPrint(JSON.parse(request.responseText));
-        };
-        //send data to server as JSON body
-        request.send(JSON.stringify(payload));
-        readData()
     }
 
     function deleteData() {
         const section = document.querySelector("#resumeSection").value;
-
         if (!section || section === "--") {
-            alert("Please select a section first.");
+            toast.warning("Please select a section first.")
             return;
         }
-
         // basics has no dropdown
         let url;
         if (section === "basics") {
             url = `http://127.0.0.1:3001/${section}`;
         } else {
             if (selectedIndex === null) {
-                alert("Please select an entry to delete.");
+                toast.warning("Please select an entry to delete.");
                 return;
             }
             url = `http://127.0.0.1:3001/${section}/${selectedIndex}`;
@@ -99,17 +88,20 @@ function App() {
 
         const request = new XMLHttpRequest();
         request.open("DELETE", url, true);
+        request.send();
         request.onload = function () {
             if (request.status >= 200 && request.status < 300) {
-                alert("Deleted successfully!");
-                readData();
-                populateEntryDropdown();
+                toast.success("Deleted successfully!")
+                // Clear current selections first
+                setSelectedIndex(null);
+                setEntries([]);
+
+                // wait for backend to update before refreshing the content
+                setTimeout(() => populateEntryDropdown(), 300);
             } else {
-                alert("Delete failed.");
+                toast.error("Delete failed!")
             }
         };
-        request.send();
-        readData()
     }
 
     /**
@@ -136,31 +128,31 @@ function App() {
     function updateData() {
         const section = document.querySelector("#resumeSection").value;
         const payload = {};
+        if (validateInput(section)) {
+            //gathers all the form field text to put it in the payload
+            document.querySelectorAll(`[id^='${section}_']`).forEach(input => {
+                payload[input.id.replace(`${section}_`, '')] = input.value;
+            });
 
-        //gathers all the form field text to put it in the payload
-        document.querySelectorAll(`[id^='${section}_']`).forEach(input => {
-            payload[input.id.replace(`${section}_`, '')] = input.value;
-        });
+            //attributes with arrays have an index for accurate change
+            const url = section === 'basics'
+                ? `http://127.0.0.1:3001/${section}`
+                : `http://127.0.0.1:3001/${section}/${selectedIndex}`;
 
-        //attributes with arrays have an index for accurate change
-        const url = section === 'basics'
-            ? `http://127.0.0.1:3001/${section}`
-            : `http://127.0.0.1:3001/${section}/${selectedIndex}`;
+            const request = new XMLHttpRequest();
+            request.open("PUT", url, true);
+            request.setRequestHeader("Content-Type", "application/json");
+            request.send(JSON.stringify(payload));
 
-        const request = new XMLHttpRequest();
-        request.open("PUT", url, true);
-        request.setRequestHeader("Content-Type", "application/json");
-        request.send(JSON.stringify(payload));
-
-        request.onload = function () {
-            if (request.status >= 200 && request.status < 300) {
-                console.log("Updated successfully!");
-                readData();
-            } else {
-                console.error("Update failed!");
-            }
-        };
-        readData()
+            request.onload = function () {
+                if (request.status >= 200 && request.status < 300) {
+                    toast.success("Updated successfully!")
+                } else {
+                    toast.error("Update failed!")
+                }
+            };
+            populateEntryDropdown()
+        }
     }
 
     /**
@@ -192,7 +184,7 @@ function App() {
                 sectionEl.className = "resume-section";
 
                 const heading = document.createElement("h3");
-                sectionEl.className = "resume-heading";
+                heading.className = "resume-heading";
                 heading.textContent = sectionKey.toUpperCase();
                 sectionEl.appendChild(heading);
 
@@ -205,7 +197,7 @@ function App() {
                         for (const key in entry) {
                             if (entry[key]) {
                                 const p = document.createElement("p");
-                                const noIndentKeys = ["name", "organization", "title", "university"];
+                                const noIndentKeys = ["name", "organization", "title"];
                                 p.textContent = noIndentKeys.includes(key) ? `${entry[key]}` : `${key.replace('_', ' ')}: ${entry[key]}`;
                                 p.style.marginLeft = noIndentKeys.includes(key) ? "0px" : "20px";
                                 entryEl.appendChild(p);
@@ -228,6 +220,7 @@ function App() {
                 sectionEl.className = "resume-section";
 
                 const heading = document.createElement("h3");
+                heading.className = "resume-heading";
                 heading.textContent = sectionKey.toUpperCase();
                 sectionEl.appendChild(heading);
 
@@ -238,9 +231,9 @@ function App() {
                 for (const key in sectionData) {
                     if (sectionData[key]) {
                         const p = document.createElement("p");
-                        p.textContent = `${key}: ${sectionData[key]}`;
-                        const noIndentKeys = ["name", "organization", "title", "university"];
+                        const noIndentKeys = ["name", "organization", "title"];
                         p.style.margin = "8px"
+                        p.textContent = noIndentKeys.includes(key) ? `${sectionData[key]}` : `${key}: ${sectionData[key]}`;
                         p.style.marginLeft = noIndentKeys.includes(key) ? "0px" : "20px";
                         p.style.lineHeight = "1";
                         objectEl.appendChild(p);
@@ -253,6 +246,21 @@ function App() {
         }
     }
 
+    function validateInput(section){
+        //finds all content in the document with the id for that section
+        const inputs = document.querySelectorAll(`[id^='${section}_']`);
+        // find at least one filled field (preferably name, title, or organization)
+        const hasMainField = Array.from(inputs).some(input =>
+            ["name", "title", "organization"].some(key =>
+                input.id.includes(`${section}_${key}`) && input.value.trim() !== ""
+            )
+        );
+        if (!hasMainField) {
+            toast.error( "Please fill out at least the name, title, or organization field before continuing.");
+            return false;
+        }
+        return true;
+    }
 
     /**
      * Handles operations that occur when a section is selected
@@ -289,12 +297,11 @@ function App() {
     }
 
     /**
-     * Populates the entryDropdown when the sections contains a valid array.
+     * Populates the entryDropdown when the sections contain a valid array.
      */
     function populateEntryDropdown() {
         //reset dropdown appearance
         setEntries([]);
-
         const section = document.querySelector("#resumeSection").value;
         const request = new XMLHttpRequest();
         request.open("GET", `http://127.0.0.1:3001/${section}`, true);
@@ -311,9 +318,10 @@ function App() {
                 }
             } else {
                 setEntries(Array.isArray(sectionData) ? sectionData : [])
+                console.log(sectionData)
             }
-            readData()
         }
+        readData()
     }
 
     async function downloadPDF() {
@@ -352,11 +360,14 @@ function App() {
 
     return (<div className="App">
         <div id="header">Resume Builder</div>
+        <ToastContainer />
         <div id="appContainer">
             <div id="controlContainer">
             <div id="buttonContainer">
                 <button className="btn" onClick={addData}>
                     <span className="icon">＋</span> Add
+                </button>                <button className="btn" onClick={readData}>
+                View
                 </button>
                 {/*if the dropdown has entries, or is in update state, show update button*/}
                 {(entries.length > 0 || inUpdateState) && <button className="btn outline" onClick={updateData}>✎ Update</button>}
@@ -375,7 +386,6 @@ function App() {
                     <option value="certificates">Certificates</option>
                     <option value="publications">Publications</option>
                     <option value="skills">Skills</option>
-                    <option value="interests">Interests</option>
                     <option value="references">References</option>
                     <option value="projects">Projects</option>
                 </select>
@@ -386,7 +396,7 @@ function App() {
                             <option>--</option>
                             {entries.map((item, index) => (
                                 <option
-                                    key={index}>{item.name || item.organization || item.title || item.university}</option>
+                                    key={index}>{item.name || item.organization || item.title}</option>
                             ))}
                         </select>
                     </div>

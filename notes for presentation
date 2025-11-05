@@ -1,10 +1,36 @@
+Implemented Features
+Purpose:
+A full-stack Resume Builder web app that lets users create, view, edit, and download a professional resume.
+
+Key Functions:
+    1. Add, update, and delete resume sections
+    2. Dynamically render resume preview
+    3. Export resume as a PDF
+    4. Store data in a local JSON file (mock database)
+
+Notes:
 1. Implement React for More Dynamic Template, also because I wanted to brush up on React, also the bevy of libraries for further complicating this project :D
 2. Switch from using Params to sending the JSON payload, as each form has n number of inputs, and I didn't want the logic to be a series of convoluted if statements (DRY anyone?)
 3. All info is kept on a local JSON
-4. use useState for Reactive variables (in App.js)
+4. use useState for Reactive variables (in App.js) allows for the reactive rendering of the forms and buttons
+5. Implement toastify (react libary) for toast notifications, also because why make your own when theres a perfectly nice library
+6. Used html2canvas	to render the DOM elements into an image. Basically like taking a screenshot, and making it a pdf
+7. jsPDF actually generates the pdf
+8. Used Express, and CORS in the backend, like shown in class
+9. Initally wanted to use Figma for styling, because Figma Make just came out. Unfortunately the code was .tsx, and was a bit too scattered for me to just come in and yoink some styles. Hence i did the styling myself.
+10. Implemented useEffect() to trigger an action that runs on start up, basically by making it not have a dependency that triggers it, it will only run the first time the page renders.
+11. routes in server.js are categorized by Method, and then sorted specific -> general. there was an issue where /resume was triggering the /:section route, so that needed to be fixed
+12. learned to live breathe documentation due to this
+13. learned how to add optional params to the route urls (its no longer ?, use {})
+
+HOW THE DOWNLOAD THING WORKS
+html2canvas renders  HTML element #resumeDisplay to a canvas (screenshot)
+canvas.toDataURL() converts the canvas to an image string
+jsPDF creates a PDF and adds the image
+pdf.save() triggers the browser download
+
 
 
 1 huge difficulty was making things work with the lifecycle. having dynamic rendering is fun and games, until i had to actually pull out the information, hence useState was introduced
-MAIN GOOD THING
 
 decided to not use figma make as the code is in tsx, and the styles were too scattered

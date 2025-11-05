@@ -1,87 +1,17 @@
 {
   "basics": {
-    "name":"Haidyn"
+    "name": "Haidyn",
+    "label": "Overlord",
+    "email": "haidyn@mail.net",
+    "phone": "911",
+    "website": "haidyn.com",
+    "summary": "she is haidyn"
   },
-  "work": [
-    {
-      "name": "Company",
-      "position": "President",
-      "url": "https://company.com",
-      "start_date": "2013-01-01",
-      "end_date": "2014-01-01",
-      "summary": "Description…",
-      "highlights": [
-        "Started the company"
-      ]
-    }
-  ],
-  "volunteer": [
-    {
-      "organization": "Organization",
-      "position": "Volunteer",
-      "website": "https://organization.com/",
-      "start_date": "2012-01-01",
-      "end_date": "2013-01-01",
-      "summary": "Description…",
-      "highlights": [
-        "Awarded 'Volunteer of the Month'"
-      ]
-    }
-  ],
-  "awards": [
-    {
-      "title": "Award",
-      "date": "2014-11-01",
-      "issuer": "Company",
-      "summary": "There is no spoon."
-    }
-  ],
-  "certificates": [
-    {
-      "title": "Certificate",
-      "date": "2021-11-07",
-      "issuer": "Company",
-      "url": "https://certificate.com"
-    }
-  ],
-  "publications": [
-    {
-      "name": "Publication",
-      "publisher": "Company",
-      "release_date": "2014-10-01",
-      "url": "https://publication.com",
-      "summary": "Description…"
-    },
-    {
-      "name": "a",
-      "publisher": "a",
-      "release_date": "999999",
-      "url": "a"
-    }
-  ],
-  "skills": [
-    {
-      "name": "Web Development",
-      "level": "Master",
-      "keywords": "HTML, CSS, JavaScript"
-    }
-  ],
-  "languages": [
-    {
-      "language": "English",
-      "fluency": "Native speaker"
-    }
-  ],
-  "interests": [
-    {
-      "name": "Wildlife",
-      "keywords": [
-        "Ferrets",
-        "Unicorns"
-      ]
-    }
-  ],
   "references": [
+    {
+      "name": "Jane Doe",
+      "reference": "Reference…"
+    },
     {
       "name": "Jane Doe",
       "reference": "Reference…"
@@ -97,6 +27,69 @@
         "Won award at AIHacks 2016"
       ],
       "url": "https://project.com/"
+    }
+  ],
+  "work": [
+    {
+      "organization": "Earth",
+      "position": "President Overlord",
+      "website": "haidyn.net",
+      "start_date": "1984-06-13",
+      "end_date": "2025-11-29",
+      "summary": "did it for fun",
+      "highlights": "all of it"
+    }
+  ],
+  "awards": [
+    {
+      "title": "Best Person Award",
+      "date": "2014-11-01",
+      "issuer": "Emira",
+      "summary": "She accepted it humbly"
+    }
+  ],
+  "certificates": [
+    {
+      "title": "CCSO Deed",
+      "date": "2021-11-07",
+      "issuer": "CCSO",
+      "url": "CCSO Deed"
+    }
+  ],
+  "education": [
+    {
+      "organization": "Penn State",
+      "website": "psu.com",
+      "area": "Everything",
+      "level": "Masters",
+      "GPA": "10.0"
+    }
+  ],
+  "volunteer": [
+    {
+      "organization": "Penn State Dressage",
+      "position": "Professional Horse Memer",
+      "website": "https://organization.com/",
+      "start_date": "2025-11-06",
+      "end_date": "2025-11-14",
+      "summary": "Description…",
+      "highlights": "Was given the crown"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Web Development",
+      "level": "amazing",
+      "keywords": "HTML, CSS, JavaScript"
+    },
+    {
+      "name": "React",
+      "level": "amazing",
+      "keywords": "HTML, CSS, JavaScript"
+    },
+    {
+      "name": "Angular",
+      "level": "Level 99"
     }
   ]
 }

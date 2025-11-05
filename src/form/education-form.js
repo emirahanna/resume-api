@@ -1,8 +1,8 @@
 export function EducationForm() {
     return (
         <div>
-            <label htmlFor="education_university">University</label>
-            <input id="education_university" type="text"/>
+            <label htmlFor="education_organization">Organization</label>
+            <input id="education_organization" type="text"/>
             <label htmlFor="education_website">Website</label>
             <input id="education_website" type="url"/>
             <label htmlFor="education_area">Area</label>

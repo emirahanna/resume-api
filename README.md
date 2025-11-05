@@ -1,3 +1,28 @@
+# Resume Builder
+
+A simple web-based resume builder that allows users to create, view, and export their resume as a PDF.  
+Built with **React**, **jsPDF**, and **html2canvas**, it provides interactive form components for each resume section (e.g., Basics, Work, Education) and dynamically displays the final formatted resume.
+
+---
+
+## Features
+- Add, edit, and delete entries for multiple resume sections
+- Automatically render resume updates in real time
+- Export the full resume as a high-quality PDF
+- Toast notifications for user actions (save/delete)
+- Modular form components for scalability
+
+---
+
+## Tech Stack
+- **Frontend:** React (Hooks, Components)
+- **PDF Generation:** jsPDF + html2canvas
+- **Notifications:** react-toastify
+- **Styling:** CSS
+
+---
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

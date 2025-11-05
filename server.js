@@ -1,5 +1,3 @@
-//Start with smallest step, client sending text to server, server updates JSON
-
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
@@ -20,7 +18,8 @@ function writeData(data) {
     fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
 }
 
-//should return full resume,
+//GET
+// Entire Resume
 app.get('/resume', (req, res) => {
     try {
         const data = readData();
@@ -34,7 +33,7 @@ app.get('/resume', (req, res) => {
         res.status(500).json({ error: "Failed to read resume data." });
     }
 })
-//retrieves just the one section
+//retrieves one section from resume
 app.get('/:section', (req, res) => {
     try {
         //retrieve data from json
@@ -51,6 +50,8 @@ app.get('/:section', (req, res) => {
     }
 });
 
+//ADD
+//Adds an entry to a resume Section
 app.post('/:category', (req, res) => {
     try {
         const newEntry = req.body;
@@ -73,7 +74,8 @@ app.post('/:category', (req, res) => {
     }
 })
 
-//update section
+//PUT
+//update existing section
 app.put('/:section{/:index}', (req, res) => {
     try {
         const data = readData();
@@ -103,7 +105,8 @@ app.put('/:section{/:index}', (req, res) => {
     }
 });
 
-
+//DELETE
+//Deletes existing section
 app.delete('/:section{/:index}', (req, res) => {
     try {
         const data = readData();
@@ -130,6 +133,7 @@ app.delete('/:section{/:index}', (req, res) => {
         }
 
         writeData(data);
+        res.status(200).json({ success: true, section, remaining: data[section] });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Server error' });

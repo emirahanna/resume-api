@@ -13,7 +13,7 @@ import {WorkForm} from "./form/work-form";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import React from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import {ToastContainer, toast} from 'react-toastify';
 
 function App() {
     //use useState for Reactive variables
@@ -59,12 +59,19 @@ function App() {
             request.open("POST", `http://127.0.0.1:3001/${section}`, true);
             request.setRequestHeader("Content-Type", "application/json");
             request.onload = function () {
-                //pretty prints it on screen
-                prettyPrint(JSON.parse(request.responseText));
+                if (request.status >= 200 && request.status < 300) {
+                    toast.success("Added successfully!")
+                    populateEntryDropdown()
+                    //pretty prints it on screen
+                    prettyPrint(JSON.parse(request.responseText));
+                    // wait for backend to update before refreshing the content
+                    setTimeout(() => populateEntryDropdown(), 300);
+                } else {
+                    toast.error("Add failed!")
+                }
             };
             //send data to server as JSON body
             request.send(JSON.stringify(payload));
-            populateEntryDropdown()
         }
     }
 
@@ -147,11 +154,12 @@ function App() {
             request.onload = function () {
                 if (request.status >= 200 && request.status < 300) {
                     toast.success("Updated successfully!")
+                    prettyPrint(JSON.parse(request.responseText));
+                    populateEntryDropdown()
                 } else {
                     toast.error("Update failed!")
                 }
             };
-            populateEntryDropdown()
         }
     }
 
@@ -246,7 +254,7 @@ function App() {
         }
     }
 
-    function validateInput(section){
+    function validateInput(section) {
         //finds all content in the document with the id for that section
         const inputs = document.querySelectorAll(`[id^='${section}_']`);
         // find at least one filled field (preferably name, title, or organization)
@@ -256,7 +264,7 @@ function App() {
             )
         );
         if (!hasMainField) {
-            toast.error( "Please fill out at least the name, title, or organization field before continuing.");
+            toast.error("Please fill out at least the name, title, or organization field before continuing.");
             return false;
         }
         return true;
@@ -318,7 +326,6 @@ function App() {
                 }
             } else {
                 setEntries(Array.isArray(sectionData) ? sectionData : [])
-                console.log(sectionData)
             }
         }
         readData()
@@ -360,53 +367,55 @@ function App() {
 
     return (<div className="App">
         <div id="header">Resume Builder</div>
-        <ToastContainer />
+        <ToastContainer/>
         <div id="appContainer">
             <div id="controlContainer">
-            <div id="buttonContainer">
-                <button className="btn" onClick={addData}>
-                    <span className="icon">＋</span> Add
-                </button>                <button className="btn" onClick={readData}>
-                View
-                </button>
-                {/*if the dropdown has entries, or is in update state, show update button*/}
-                {(entries.length > 0 || inUpdateState) && <button className="btn outline" onClick={updateData}>✎ Update</button>}
-                <button className="btn" onClick={deleteData}> Delete</button>
-                <button className="btn" onClick={downloadPDF}>⬇ Download PDF</button>
-                <button className="btn" onClick={viewResume}>Show Full Resume</button>
+                <div id="buttonContainer">
+                    <button className="btn" onClick={addData}>
+                        <span className="icon">＋</span> Add
+                    </button>
+                    <button className="btn" onClick={populateEntryDropdown}>
+                        View
+                    </button>
+                    {/*if the dropdown has entries, or is in update state, show update button*/}
+                    {(entries.length > 0 || inUpdateState) &&
+                        <button className="btn outline" onClick={updateData}>✎ Update</button>}
+                    <button className="btn" onClick={deleteData}> Delete</button>
+                    <button className="btn" onClick={downloadPDF}>⬇ Download PDF</button>
+                    <button className="btn" onClick={viewResume}>Show Full Resume</button>
+                </div>
+                <div id="textFieldContainer">
+                    <label htmlFor="resumeSection">Resume Section:</label>
+                    <select name="resume-section" id="resumeSection" onChange={selectSection}>
+                        <option value="basics">Basic Information</option>
+                        <option value="work">Work</option>
+                        <option value="volunteer">Volunteering Experience</option>
+                        <option value="education">Education</option>
+                        <option value="awards">Awards</option>
+                        <option value="certificates">Certificates</option>
+                        <option value="publications">Publications</option>
+                        <option value="skills">Skills</option>
+                        <option value="references">References</option>
+                        <option value="projects">Projects</option>
+                    </select>
+                    {showSectionEntry && entries.length > 0 && (
+                        <div>
+                            <label htmlFor="sectionEntry">Section Entry:</label>
+                            <select name="section-entry" id="sectionEntry" onChange={selectEntry}>
+                                <option>--</option>
+                                {entries.map((item, index) => (
+                                    <option
+                                        key={index}>{item.name || item.organization || item.title}</option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
+                    {formComponents[selectedSection]}
+                </div>
             </div>
-            <div id="textFieldContainer">
-                <label htmlFor="resumeSection">Resume Section:</label>
-                <select name="resume-section" id="resumeSection" onChange={selectSection}>
-                    <option value="basics">Basic Information</option>
-                    <option value="work">Work</option>
-                    <option value="volunteer">Volunteering Experience</option>
-                    <option value="education">Education</option>
-                    <option value="awards">Awards</option>
-                    <option value="certificates">Certificates</option>
-                    <option value="publications">Publications</option>
-                    <option value="skills">Skills</option>
-                    <option value="references">References</option>
-                    <option value="projects">Projects</option>
-                </select>
-                {showSectionEntry && entries.length > 0 && (
-                    <div>
-                        <label htmlFor="sectionEntry">Section Entry:</label>
-                        <select name="section-entry" id="sectionEntry" onChange={selectEntry}>
-                            <option>--</option>
-                            {entries.map((item, index) => (
-                                <option
-                                    key={index}>{item.name || item.organization || item.title}</option>
-                            ))}
-                        </select>
-                    </div>
-                )}
-                {formComponents[selectedSection]}
+            <div id="resumeDisplay">
+                Your future resume goes here!
             </div>
-        </div>
-        <div id="resumeDisplay">
-            Your future resume goes here!
-        </div>
         </div>
 
     </div>);

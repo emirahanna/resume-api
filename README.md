@@ -5,6 +5,14 @@ Built with **React**, **jsPDF**, and **html2canvas**, it provides interactive fo
 
 ---
 
+## Steps for grading
+1. Navigate to the project in the terminal
+2. run `npm install` to install all dependencies
+3. run `npm start` to run project locally
+4. run `node server.js` to run backend locally
+
+---
+
 ## Features
 - Add, edit, and delete entries for multiple resume sections
 - Automatically render resume updates in real time

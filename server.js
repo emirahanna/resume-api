@@ -43,7 +43,7 @@ app.get('/:section', (req, res) => {
         if (!data[section]) {
             data[section] = section === 'basics' ? {} : [];
         }
-        res.json({ [section]: data[section] });
+        res.status(200).json({ [section]: data[section] });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Server error' });
@@ -67,6 +67,7 @@ app.post('/:category', (req, res) => {
         }
         //write the new data to the json
         writeData(data);
+        res.status(200).json(data);
     }
     catch (err) {
         console.error(err);
@@ -98,7 +99,7 @@ app.put('/:section{/:index}', (req, res) => {
         }
 
         writeData(data);
-        res.json({ success: true, [section]: data[section] });
+        res.status(200).json( {[section]: data[section] });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Server error' });

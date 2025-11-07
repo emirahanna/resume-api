@@ -1,6 +1,6 @@
 {
   "basics": {
-    "name": "Haidyn",
+    "name": "Haidyn Yes",
     "label": "Overlord",
     "email": "haidyn@mail.net",
     "phone": "911",
@@ -38,6 +38,15 @@
       "end_date": "2025-11-29",
       "summary": "did it for fun",
       "highlights": "all of it"
+    },
+    {
+      "organization": "Earth 3",
+      "position": "President Overlord",
+      "website": "haidyn.net",
+      "start_date": "1984-06-13",
+      "end_date": "2025-11-29",
+      "summary": "did it for fun",
+      "highlights": "all of it"
     }
   ],
   "awards": [
@@ -67,7 +76,16 @@
   ],
   "volunteer": [
     {
-      "organization": "Penn State Dressage",
+      "organization": "Penn State Meme",
+      "position": "Professional Horse Memer",
+      "website": "https://organization.com/",
+      "start_date": "2025-11-06",
+      "end_date": "2025-11-14",
+      "summary": "Description…",
+      "highlights": "Was given the crown"
+    },
+    {
+      "organization": "Penn State Volleyball",
       "position": "Professional Horse Memer",
       "website": "https://organization.com/",
       "start_date": "2025-11-06",

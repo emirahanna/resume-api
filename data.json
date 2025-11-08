@@ -1,113 +1,15 @@
 {
   "basics": {
-    "name": "Haidyn Yes",
-    "label": "Overlord",
-    "email": "haidyn@mail.net",
-    "phone": "911",
-    "website": "haidyn.com",
-    "summary": "she is haidyn"
+    "name": "",
+    "email": ""
   },
-  "references": [
-    {
-      "name": "Jane Doe",
-      "reference": "Reference…"
-    },
-    {
-      "name": "Jane Doe",
-      "reference": "Reference…"
-    }
-  ],
-  "projects": [
-    {
-      "name": "Project",
-      "start_date": "2019-01-01",
-      "end_date": "2021-01-01",
-      "description": "Description...",
-      "highlights": [
-        "Won award at AIHacks 2016"
-      ],
-      "url": "https://project.com/"
-    }
-  ],
-  "work": [
-    {
-      "organization": "Earth",
-      "position": "President Overlord",
-      "website": "haidyn.net",
-      "start_date": "1984-06-13",
-      "end_date": "2025-11-29",
-      "summary": "did it for fun",
-      "highlights": "all of it"
-    },
-    {
-      "organization": "Earth 3",
-      "position": "President Overlord",
-      "website": "haidyn.net",
-      "start_date": "1984-06-13",
-      "end_date": "2025-11-29",
-      "summary": "did it for fun",
-      "highlights": "all of it"
-    }
-  ],
-  "awards": [
-    {
-      "title": "Best Person Award",
-      "date": "2014-11-01",
-      "issuer": "Emira",
-      "summary": "She accepted it humbly"
-    }
-  ],
-  "certificates": [
-    {
-      "title": "CCSO Deed",
-      "date": "2021-11-07",
-      "issuer": "CCSO",
-      "url": "CCSO Deed"
-    }
-  ],
+  "references": [],
+  "projects": [],
+  "work": [],
+  "awards": [],
+  "certificates": [],
   "education": [
-    {
-      "organization": "Penn State",
-      "website": "psu.com",
-      "area": "Everything",
-      "level": "Masters",
-      "GPA": "10.0"
-    }
   ],
-  "volunteer": [
-    {
-      "organization": "Penn State Meme",
-      "position": "Professional Horse Memer",
-      "website": "https://organization.com/",
-      "start_date": "2025-11-06",
-      "end_date": "2025-11-14",
-      "summary": "Description…",
-      "highlights": "Was given the crown"
-    },
-    {
-      "organization": "Penn State Volleyball",
-      "position": "Professional Horse Memer",
-      "website": "https://organization.com/",
-      "start_date": "2025-11-06",
-      "end_date": "2025-11-14",
-      "summary": "Description…",
-      "highlights": "Was given the crown"
-    }
-  ],
-  "skills": [
-    {
-      "name": "Web Development",
-      "level": "amazing",
-      "keywords": "HTML, CSS, JavaScript"
-    },
-    {
-      "name": "React",
-      "level": "amazing",
-      "keywords": "HTML, CSS, JavaScript"
-    },
-    {
-      "name": "Angular",
-      "level": "Level 99"
-    }
-  ]
+  "volunteer": [],
+  "skills": []
 }
